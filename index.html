@@ -50,7 +50,6 @@
         }
         .form-group textarea { min-height: 80px; }
         
-        /* تغییر: بهبود دکمه آپلود فایل برای موبایل */
         .file-upload-box {
             border: 2px dashed #555;
             border-radius: 8px;
@@ -72,7 +71,6 @@
         .file-upload-box:hover { border-color: var(--gold); }
         #fileName, #fileName2 { display: block; color: var(--gold); font-size: 11px; margin-top: 4px; }
         
-        /* تغییر: مخفی نکردن input فایل و بهبود دسترسی */
         input[type="file"] { 
             opacity: 0;
             position: absolute;
@@ -194,7 +192,6 @@
             font-size: 11px;
         }
 
-        /* تغییر: نمایش دسکتاپ در موبایل */
         @media screen and (max-width: 768px) {
             #newspaper {
                 width: 100% !important;
@@ -242,12 +239,12 @@
         </div>
         <div class="form-group">
             <label>🖼️ عکس اول</label>
-            <!-- تغییر: استفاده از label با trigger مستقیم -->
             <label class="file-upload-box" for="imageFile" id="fileLabel1">
                 📁 انتخاب عکس اول از گالری
                 <span id="fileName">هیچ عکسی انتخاب نشده</span>
             </label>
-            <input type="file" id="imageFile" accept="image/*" capture="environment">
+            <!-- حذف capture="environment" -->
+            <input type="file" id="imageFile" accept="image/*">
         </div>
         <div class="form-group">
             <label>🖼️ عکس دوم</label>
@@ -255,7 +252,8 @@
                 📁 انتخاب عکس دوم از گالری
                 <span id="fileName2">هیچ عکسی انتخاب نشده</span>
             </label>
-            <input type="file" id="imageFile2" accept="image/*" capture="environment">
+            <!-- حذف capture="environment" -->
+            <input type="file" id="imageFile2" accept="image/*">
         </div>
         <div class="form-group">
             <label>📝 متن خبر اصلی</label>
@@ -314,7 +312,6 @@
         let selectedImageDataUrl = null;
         let selectedImageDataUrl2 = null;
 
-        // تغییر: بهبود انتخاب فایل برای موبایل
         document.getElementById('imageFile').addEventListener('change', function(e) {
             const file = e.target.files[0];
             const s = document.getElementById('fileName');
@@ -351,9 +348,7 @@
             }
         });
 
-        // تغییر: کلیک روی label برای باز کردن مستقیم فایل‌پیکر در موبایل
         document.getElementById('fileLabel1').addEventListener('click', function(e) {
-            // جلوگیری از تداخل با event خود label
             e.preventDefault();
             document.getElementById('imageFile').click();
         });
@@ -410,7 +405,7 @@
                 btn.disabled = false;
                 
                 setTimeout(() => {
-                    btn.textContent = '📸 دریافت عکسس';
+                    btn.textContent = '📸 دریافت عکس';
                 }, 2000);
             }).catch(err => {
                 alert('❌ خطا. VPN وصل کنید و دوباره امتحان کنید.');
