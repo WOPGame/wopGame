@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>روزنامه جنگ مدرنن</title>
+    <title>روزنامه جنگ مدرن</title>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
@@ -181,6 +181,7 @@
         }
         .np-footer { border-top: 2px solid #8b7b5c; font-size: 10px; color: #5c4a2e; text-align: center; display: flex; justify-content: space-between; padding-top: 6px; }
         
+        /* کادر زرد VPN - همیشه نمایش داده میشه */
         .vpn-note {
             background: #3a2e1e;
             border: 1px solid var(--gold);
@@ -190,6 +191,38 @@
             text-align: center;
             color: var(--gold);
             font-size: 11px;
+        }
+
+        /* کادر قرمز - فقط برای موبایل (با جاوااسکریپت نمایش داده میشه) */
+        .mobile-warning {
+            background: #4a1a1a;
+            border: 2px solid #ff3333;
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-top: 10px;
+            text-align: center;
+            color: #ff6666;
+            font-size: 12px;
+            line-height: 1.8;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+            animation: pulse 2s infinite;
+            display: none; /* مخفی پیش‌فرض */
+        }
+
+        .mobile-warning strong {
+            font-size: 13px;
+        }
+        .mobile-warning .icon {
+            font-size: 20px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        @keyframes pulse {
+            0% { border-color: #ff3333; box-shadow: 0 0 15px rgba(255, 0, 0, 0.2); }
+            50% { border-color: #ff6666; box-shadow: 0 0 25px rgba(255, 0, 0, 0.4); }
+            100% { border-color: #ff3333; box-shadow: 0 0 15px rgba(255, 0, 0, 0.2); }
         }
 
         @media screen and (max-width: 768px) {
@@ -213,8 +246,18 @@
     <div id="panel">
         <h2>📰 روزنامه عملیاتی</h2>
         
+        <!-- کادر زرد VPN - همیشه نمایش داده میشه -->
         <div class="vpn-note">
             ⚠️ بار اول با <strong>VPN</strong> باز کنید تا کتابخانه لود شود. دفعات بعد بدون VPN هم کار می‌کند.
+        </div>
+
+        <!-- کادر قرمز - فقط برای موبایل (با جاوااسکریپت نمایش داده میشه) -->
+        <div class="mobile-warning" id="mobileWarning">
+            <span class="icon">📱</span>
+            <strong>⚠️ توجه ویژه کاربران گوشی:</strong><br>
+            اگر با <strong>گوشی موبایل</strong> وارد شده‌اید، حتماً از <strong>گزینه سه نقطه</strong> (⚙️) در مرورگر خود، 
+            گزینه <strong>«سایت مخصوص کامپیوتر»</strong> یا <strong>«Desktop site»</strong> را <strong>فعال</strong> کنید.<br>
+            <span style="color: #ff4444; font-size: 11px;">❌ در غیر این صورت، عکس خروجی به درستی ذخیره نمی‌شود!</span>
         </div>
 
         <div class="form-group" style="margin-top:12px;">
@@ -243,7 +286,6 @@
                 📁 انتخاب عکس اول از گالری
                 <span id="fileName">هیچ عکسی انتخاب نشده</span>
             </label>
-            <!-- حذف capture="environment" -->
             <input type="file" id="imageFile" accept="image/*">
         </div>
         <div class="form-group">
@@ -252,7 +294,6 @@
                 📁 انتخاب عکس دوم از گالری
                 <span id="fileName2">هیچ عکسی انتخاب نشده</span>
             </label>
-            <!-- حذف capture="environment" -->
             <input type="file" id="imageFile2" accept="image/*">
         </div>
         <div class="form-group">
@@ -309,6 +350,34 @@
     </div>
 
     <script>
+        // ============ تشخیص خودکار دستگاه ============
+        function detectDevice() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            
+            // تشخیص موبایل
+            const isMobile = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile/i.test(userAgent);
+            
+            // تشخیص تبلت (اختیاری)
+            const isTablet = /ipad|tablet|playbook|silk/i.test(userAgent);
+            
+            return { isMobile, isTablet, isDesktop: !isMobile && !isTablet };
+        }
+
+        // اجرای تشخیص
+        const device = detectDevice();
+
+        // فقط در صورت موبایل بودن، هشدار قرمز نمایش داده بشه
+        if (device.isMobile || device.isTablet) {
+            // کاربر موبایل یا تبلت - نمایش هشدار قرمز
+            document.getElementById('mobileWarning').style.display = 'block';
+            console.log('📱 دستگاه موبایل تشخیص داده شد - هشدار نمایش داده شد');
+        } else {
+            // کاربر دسکتاپ - هیچ هشداری نمایش داده نمیشه
+            document.getElementById('mobileWarning').style.display = 'none';
+            console.log('💻 دستگاه دسکتاپ تشخیص داده شد - بدون هشدار');
+        }
+        // =============================================
+
         let selectedImageDataUrl = null;
         let selectedImageDataUrl2 = null;
 
