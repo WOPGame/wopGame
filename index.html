@@ -193,7 +193,7 @@
             font-size: 11px;
         }
 
-        /* کادر قرمز - فقط برای موبایل (با جاوااسکریپت نمایش داده میشه) */
+        /* کادر قرمز - فقط برای موبایل */
         .mobile-warning {
             background: #4a1a1a;
             border: 2px solid #ff3333;
@@ -209,11 +209,27 @@
             animation: pulse 2s infinite;
             display: none; /* مخفی پیش‌فرض */
         }
+        
+        /* کادر سبز - فقط برای دسکتاپ */
+        .desktop-warning {
+            background: #1a3a1a;
+            border: 2px solid #33ff33;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-top: 10px;
+            text-align: center;
+            color: #66ff66;
+            font-size: 12px;
+            line-height: 1.8;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.15);
+            display: none; /* مخفی پیش‌فرض */
+        }
 
-        .mobile-warning strong {
+        .mobile-warning strong, .desktop-warning strong {
             font-size: 13px;
         }
-        .mobile-warning .icon {
+        .mobile-warning .icon, .desktop-warning .icon {
             font-size: 20px;
             display: block;
             margin-bottom: 4px;
@@ -258,6 +274,14 @@
             اگر با <strong>گوشی موبایل</strong> وارد شده‌اید، حتماً از <strong>گزینه سه نقطه</strong> (⚙️) در مرورگر خود، 
             گزینه <strong>«سایت مخصوص کامپیوتر»</strong> یا <strong>«Desktop site»</strong> را <strong>فعال</strong> کنید.<br>
             <span style="color: #ff4444; font-size: 11px;">❌ در غیر این صورت، عکس خروجی به درستی ذخیره نمی‌شود!</span>
+        </div>
+
+        <!-- کادر سبز - فقط برای دسکتاپ (با جاوااسکریپت نمایش داده میشه) -->
+        <div class="desktop-warning" id="desktopWarning">
+            <span class="icon">💻</span>
+            <strong>✅ دستگاه شما شناسایی شد:</strong><br>
+            شما در حال استفاده از <strong>سیستم ویندوز / دسکتاپ</strong> هستید.<br>
+            <span style="color: #88ff88; font-size: 11px;">✔️ نیازی به فعال کردن Desktop Site نیست.</span>
         </div>
 
         <div class="form-group" style="margin-top:12px;">
@@ -366,15 +390,20 @@
         // اجرای تشخیص
         const device = detectDevice();
 
-        // فقط در صورت موبایل بودن، هشدار قرمز نمایش داده بشه
+        // نمایش هشدار مناسب
         if (device.isMobile || device.isTablet) {
-            // کاربر موبایل یا تبلت - نمایش هشدار قرمز
+            // کاربر موبایل یا تبلت
             document.getElementById('mobileWarning').style.display = 'block';
-            console.log('📱 دستگاه موبایل تشخیص داده شد - هشدار نمایش داده شد');
+            document.getElementById('desktopWarning').style.display = 'none';
+            
+            // اضافه کردن هشدار در کنسول (برای دیباگ)
+            console.log('📱 دستگاه موبایل تشخیص داده شد - لطفاً Desktop Site را فعال کنید');
         } else {
-            // کاربر دسکتاپ - هیچ هشداری نمایش داده نمیشه
+            // کاربر دسکتاپ
             document.getElementById('mobileWarning').style.display = 'none';
-            console.log('💻 دستگاه دسکتاپ تشخیص داده شد - بدون هشدار');
+            document.getElementById('desktopWarning').style.display = 'block';
+            
+            console.log('💻 دستگاه دسکتاپ تشخیص داده شد');
         }
         // =============================================
 
